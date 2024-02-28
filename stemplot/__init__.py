@@ -1,29 +1,32 @@
-from ._axes import *
-from stemplot.arrows._arrows import *
-from stemplot.arrows._progressive_arrows import *
-from ._style import *
-from ._transform import *
-from ._layout import *
-from ._interactive import *
-from ._cursor import *
-from ._misc import *
-from ._text import *
-from ._chord_digram import chord_diagram
+# Version should always be readily available.
+__version__ = '0.1.0'
 
-from stemplot.colors._color_data import cc
-from stemplot.colors._colormaps import *
-from stemplot.colors._colorbar import *
-from stemplot.colors._colors import *
-from stemplot.interative.interative_layout import interactive_clusters
-from stemplot.interative.interactive_signals import interactive_signals
+# Lazy loading for sub-packages.
+class _LazyLoader:
+    def __init__(self, package_name):
+        self._package_name = package_name
+        self._module = None
 
+    def _load(self):
+        if self._module is None:
+            self._module = __import__(self._package_name, globals(), locals(), ['*'])
+        return self._module
 
-from ._svg2mpl import parse_path
-from ._utils import plot_placeholder_image
-from ._utils import get_placeholder_image
+    def __getattr__(self, name):
+        module = self._load()
+        return getattr(module, name)
 
-from stemplot.cplot._colorize_oklab import get_srgb1
-from stemplot.cplot._colorize import colorize
+    def __dir__(self):
+        module = self._load()
+        return dir(module)
 
-from stemplot.patches._fancybox import *
+# Setup lazy loading for sub-packages.
+color = _LazyLoader('stemplot.colors')
+arrows = _LazyLoader('stemplot.arrows')
+layout = _LazyLoader('stemplot.layout')
 
+# Explicit imports for frequently used functions or classes
+# These are assumed to be lightweight and commonly used enough to justify immediate loading.
+from stemplot.colors._colors import colors_from_lbs  # Assuming colors_from_lbs is lightweight
+
+__all__ = ['color', 'arrows', 'layout', 'colors_from_lbs']
