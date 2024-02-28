@@ -2,4 +2,4 @@
 stemplot/nn/
 stemplot/__pycache__/
 
-_app.py
+stemplot/_app.py
