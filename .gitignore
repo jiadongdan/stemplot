@@ -1,4 +1,6 @@
 .idea/**
-stemplot/nn/**
 stemplot/__pycache__/**
-stemplot/_app.py
+stemplot/nn/**
+stemplot/gaomeng/**
+stemplot/interactive/**
+stemplot/mx2/**
