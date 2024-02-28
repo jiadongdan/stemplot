@@ -1,5 +1,5 @@
-.idea/
-stemplot/nn/
-stemplot/__pycache__/
+.idea/**
+stemplot/nn/**
+stemplot/__pycache__/**
 
 stemplot/_app.py
