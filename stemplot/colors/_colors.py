@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mc
-from ._color_data import mpl_20
+from ._color_data import tab20
 from ._colormaps import get_cmap
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -24,7 +24,7 @@ def to_hex(colors, keep_alpha=False):
 # this function is frequnetly used !!!
 def colors_from_lbs(lbs, colors=None, xy=None, alpha_min=0.5):
     if colors is None:
-        colors = np.array(mpl_20)
+        colors = np.array(tab20)
     else:
         colors = np.array(colors)
     lbs = np.array(lbs) % len(colors)

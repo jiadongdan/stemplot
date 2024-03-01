@@ -1,5 +1,5 @@
 .idea/**
-stemplot/__pycache__/**
+**/__pycache__/
 stemplot/nn/**
 stemplot/gaomeng/**
 stemplot/interactive/**
