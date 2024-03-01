@@ -28,5 +28,10 @@ layout = _LazyLoader('stemplot.layout')
 # Explicit imports for frequently used functions or classes
 # These are assumed to be lightweight and commonly used enough to justify immediate loading.
 from stemplot.colors._colors import colors_from_lbs  # Assuming colors_from_lbs is lightweight
+from stemplot.layout._layout import h_axes
 
-__all__ = ['colors', 'arrows', 'layout', 'colors_from_lbs']
+__all__ = ['colors',
+           'arrows',
+           'layout',
+           'colors_from_lbs',
+           'h_axes']
