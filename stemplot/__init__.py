@@ -29,9 +29,12 @@ layout = _LazyLoader('stemplot.layout')
 # These are assumed to be lightweight and commonly used enough to justify immediate loading.
 from stemplot.colors._colors import colors_from_lbs  # Assuming colors_from_lbs is lightweight
 from stemplot.layout._layout import h_axes
+from stemplot.patches._polygon import ax_add_gradient_polygon
 
 __all__ = ['colors',
            'arrows',
            'layout',
            'colors_from_lbs',
-           'h_axes']
+           'h_axes',
+           'ax_add_gradient_polygon',
+           ]
