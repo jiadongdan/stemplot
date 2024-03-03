@@ -2,11 +2,14 @@ import numpy as np
 import matplotlib.patches as patches
 from matplotlib.path import Path
 
+import numpy as np
+import matplotlib.patches as patches
+from matplotlib.path import Path
 
 
-def ax_add_gradient_polygon(ax, vertices, angle, cmap, resolution=100, **kwargs):
+def ax_add_gradient_polygon(ax, vertices, angle, cmap, resolution=100, alpha=None, **kwargs):
     """
-    Add a gradient-filled polygon to a Matplotlib axis.
+    Add a gradient-filled polygon to a Matplotlib axis with an optional alpha gradient that follows the gradient angle.
 
     Parameters:
     - ax: The Matplotlib axis to draw on.
@@ -14,6 +17,7 @@ def ax_add_gradient_polygon(ax, vertices, angle, cmap, resolution=100, **kwargs)
     - angle: The angle of the gradient in degrees.
     - cmap: The colormap of the gradient.
     - resolution: The resolution of the gradient meshgrid.
+    - alpha: None, float in [0, 1], or array-like with two values for alpha gradient.
     - **kwargs: Additional keyword arguments for patch customization.
     """
     # Ensure vertices form a closed loop by appending the first vertex if necessary.
@@ -35,12 +39,25 @@ def ax_add_gradient_polygon(ax, vertices, angle, cmap, resolution=100, **kwargs)
     # Normalize the gradient to [0, 1].
     gradient = (gradient - gradient.min()) / (gradient.max() - gradient.min())
 
+    if alpha is None:
+        alpha = 1  # Default alpha value.
+    elif isinstance(alpha, (list, tuple, np.ndarray)) and len(alpha) == 2:
+        # Create an alpha gradient that follows the specified angle.
+        # Calculate the alpha values across the gradient direction.
+        alpha_values = np.linspace(alpha[0], alpha[1], resolution)
+        alpha_gradient = np.cos(angle_rad) * (X - min_x) / (max_x - min_x) + np.sin(angle_rad) * (Y - min_y) / (
+                    max_y - min_y)
+        alpha_gradient = (alpha_gradient - alpha_gradient.min()) / (alpha_gradient.max() - alpha_gradient.min())
+        alpha = np.interp(alpha_gradient, (alpha_gradient.min(), alpha_gradient.max()), (alpha[0], alpha[1]))
+    # Ensure alpha is applied as intended.
+    kwargs['alpha'] = alpha
+
     # Create a Path for the polygon.
     codes = [Path.MOVETO] + [Path.LINETO] * (len(vertices) - 2) + [Path.CLOSEPOLY]
     path = Path(vertices, codes)
 
     # Create and add a patch to clip the gradient.
-    patch = patches.PathPatch(path, edgecolor='none', facecolor='none', **kwargs)
+    patch = patches.PathPatch(path, edgecolor='none', facecolor='none')
     ax.add_patch(patch)
 
     # Display the gradient and clip it with the polygon.
