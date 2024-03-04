@@ -2,10 +2,6 @@ import numpy as np
 import matplotlib.patches as patches
 from matplotlib.path import Path
 
-import numpy as np
-import matplotlib.patches as patches
-from matplotlib.path import Path
-
 
 def ax_add_gradient_polygon(ax, vertices, angle, cmap, resolution=100, alpha=None, **kwargs):
     """
@@ -146,3 +142,72 @@ def create_hollow_ellipse(center, width, height, ratio):
     patch = patches.PathPatch(path, fill=True, facecolor='lightgrey', edgecolor='black')
 
     return patch
+
+
+def create_beam(p1, p2, p3, **kwargs):
+    x1, y1 = p1
+    x2, y2 = p2
+    x3, y3 = p3
+    width = np.abs(x2 - x3)
+    height = width / 2.
+
+    # Base of the ellipse
+    x0 = (x2 + x3) / 2
+    y0 = (y2 + y3) / 2
+
+    # Recalculate elements to ensure correct path creation
+    a_value = width / 2
+    b_value = height / 2
+
+    ratio = a_value / b_value
+
+    h = y1 - y0
+    # p1 is below p2 and p3
+    if y1 < y0:
+        h_value = np.abs(y1 - y0)
+
+        x_tangent_left = -a_value * np.sqrt(h_value ** 2 - b_value ** 2) / h_value
+        y_tangent_left = -(h_value - (-b_value ** 2 + h_value ** 2) / h_value)
+        x_tangent_right = a_value * np.sqrt(h_value ** 2 - b_value ** 2) / h_value
+        y_tangent_right = y_tangent_left  # Same y-coordinate for both points
+
+        theta_range1 = np.linspace(np.arctan2(y_tangent_right * ratio, x_tangent_right), 0, 100)
+        theta_range2 = np.linspace(0, np.arctan2(y_tangent_left * ratio, x_tangent_left) + 2 * np.pi, 100)
+        theta_range = np.hstack([theta_range1, theta_range2])
+    else:
+        # p1 is above p2 and p3
+        h_value = np.abs(y1 - y0)
+
+        x_tangent_left = -a_value * np.sqrt(h_value ** 2 - b_value ** 2) / h_value
+        y_tangent_left = h_value - (-b_value ** 2 + h_value ** 2) / h_value
+        x_tangent_right = a_value * np.sqrt(h_value ** 2 - b_value ** 2) / h_value
+        y_tangent_right = y_tangent_left  # Same y-coordinate for both points
+
+        theta_range1 = np.linspace(0, np.arctan2(y_tangent_right * ratio, x_tangent_right), 100)[::-1]
+        theta_range2 = np.linspace(np.arctan2(y_tangent_left * ratio, x_tangent_left), 2 * np.pi, 100)[::-1]
+        theta_range = np.hstack([theta_range1, theta_range2])
+
+    x_ellipse = a_value * np.cos(theta_range)
+    y_ellipse = b_value * np.sin(theta_range)
+
+    # Combining vertices, starting and ending at P, including lower part of the ellipse
+    vertices = np.vstack(([0, h],
+                          [x_tangent_right, y_tangent_right],
+                          np.column_stack((x_ellipse, y_ellipse)),
+                          [x_tangent_left, y_tangent_left],
+                          [0, h])) + [x0, y0]
+
+    # Codes for the path
+    codes = [Path.MOVETO] + [Path.LINETO] + [Path.LINETO] * (len(theta_range) + 1) + [Path.CLOSEPOLY]
+
+    # Creating the path and the patch
+    path = Path(vertices, codes)
+    patch = patches.PathPatch(path, **kwargs)
+
+    return patch
+
+
+def plot_beam(ax, p1, p2, p3, cmap, **kwargs):
+    patch = create_beam(p1, p2, p3)
+    vertices = patch._path.vertices
+    ax_add_gradient_polygon(ax, vertices=vertices, angle=90, cmap=cmap, **kwargs)
