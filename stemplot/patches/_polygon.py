@@ -208,6 +208,7 @@ def create_beam(p1, p2, p3, **kwargs):
 
 
 def plot_beam(ax, p1, p2, p3, cmap, **kwargs):
+    # create pathpatch for beam
     patch = create_beam(p1, p2, p3)
     vertices = patch._path.vertices
     ax_add_gradient_polygon(ax, vertices=vertices, angle=90, cmap=cmap, **kwargs)
