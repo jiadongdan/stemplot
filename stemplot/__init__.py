@@ -30,6 +30,7 @@ layout = _LazyLoader('stemplot.layout')
 from stemplot.colors._colors import colors_from_lbs  # Assuming colors_from_lbs is lightweight
 from stemplot.layout._layout import h_axes
 from stemplot.patches._polygon import ax_add_gradient_polygon
+from stemplot.utils._plot_density import plot_density
 
 __all__ = ['colors',
            'arrows',
@@ -37,4 +38,5 @@ __all__ = ['colors',
            'colors_from_lbs',
            'h_axes',
            'ax_add_gradient_polygon',
+           'plot_density'
            ]
