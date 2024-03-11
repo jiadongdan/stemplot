@@ -2,6 +2,6 @@
 **/__pycache__/
 stemplot/nn/**
 stemplot/gaomeng/**
-stemplot/interactive/**
+stemplot/interactive_old/**
 stemplot/mx2/**
 stemplot/legacy/**
