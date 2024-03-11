@@ -12,26 +12,30 @@ def _update_signal(ax, p, **kwargs):
     else:
         ax.plot(p, **kwargs)
 
+def
+
 
 class InteractiveSignals:
 
-    def __init__(self, fig, X, ps, lbs=None, max_samples=15, **kwargs):
+    def __init__(self, fig, xy, data, lbs=None, max_samples=15, mode=None, **kwargs):
         self.fig = fig
         self.ax_cluster = fig.axes[0]
         self.ax_patch = fig.axes[1]
 
-        self.X = X
-        self.ps = ps
+        self.data = data
+        self.xy = xy
+
+        self.mode = mode
 
         if lbs is None:
-            self.lbs_ = [0,]*len(self.ps)
+            self.lbs_ = [0,]*len(self.data)
         else:
             self.lbs_ = lbs
         self.colors = colors_from_lbs(self.lbs_)
 
-        self.path_collection = self.ax_cluster.scatter(X[:, 0], X[:, 1], c=self.colors, **kwargs)
+        self.path_collection = self.ax_cluster.scatter(xy[:, 0], xy[:, 1], c=self.colors, **kwargs)
         for e in np.unique(self.lbs_):
-            x, y = X[self.lbs_ == e].mean(axis=0)
+            x, y = xy[self.lbs_ == e].mean(axis=0)
             self.ax_cluster.text(x, y, s=e, transform=self.ax_cluster.transData)
         self.ax_cluster.axis('equal')
 
@@ -39,11 +43,9 @@ class InteractiveSignals:
         self.max_samples = max_samples
 
         self.ind = None
-        self.X_selected = None
+        self.xy_selected = None
 
-        self.lbs = np.array(len(self.ps) * [-1])
-
-        self.num_clusters = 0
+        self.lbs = np.array(len(self.data) * [-1])
 
         self.lasso = LassoSelector(self.ax_cluster, onselect=self.onselect)
 
@@ -51,21 +53,17 @@ class InteractiveSignals:
         path = Path(event)
         self.ind = np.nonzero(path.contains_points(self.X))[0]
         if self.ind.size != 0:
-            self.X_selected = self.X[self.ind]
+            self.xy_selected = self.xy[self.ind]
 
-            # mode now only support numeric type
-            #c = mode(self.colors[self.ind])[0][0]
-            cs, cnts = np.unique(self.colors[self.ind], return_counts=True, axis=0)
-            c = cs[np.argmax(cnts)]
-            # update mean patch
-            #p = self.ps[self.ind].mean(axis=0)
-            idx = np.random.choice(len(self.ind), 1)[0]
-            p = self.ps[self.ind][idx]
-            _update_signal(self.ax_patch, p, color=self.colors[self.ind][idx])
+            if self.mode is None:
+                pass
+            elif self.mode is 'mean':
+                pass
+
             self.fig.canvas.draw_idle()
 
 
-def interactive_signals(X, ps, lbs=None, max_samples=15, **kwargs):
+def interactive_signals(xy, data, lbs=None, max_samples=15, **kwargs):
     fig, ax = plt.subplots(1, 2, figsize=(12, 6))
-    app = InteractiveSignals(fig, X, ps, lbs, max_samples, **kwargs)
+    app = InteractiveSignals(fig, xy, data, lbs, max_samples, **kwargs)
     return app
