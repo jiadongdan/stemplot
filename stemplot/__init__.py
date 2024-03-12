@@ -32,6 +32,8 @@ from stemplot.layout._layout import h_axes
 from stemplot.patches._polygon import ax_add_gradient_polygon
 from stemplot.utils._plot_density import plot_density
 from stemplot.interactive._data_explorer import interactive_data
+from stemplot.interactive._data_slicer import imshow
+
 
 __all__ = ['colors',
            'arrows',
@@ -41,4 +43,5 @@ __all__ = ['colors',
            'ax_add_gradient_polygon',
            'plot_density',
            'interactive_data',
+           'imshow'
            ]
