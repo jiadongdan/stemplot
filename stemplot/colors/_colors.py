@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mc
+from matplotlib.colors import hsv_to_rgb
 from ._color_data import tab20
 from ._colormaps import get_cmap
 
@@ -46,5 +47,39 @@ def colors_from_cmap(cmap, num=10, low=0., high=1., alpha=1.):
     rgba = cmap(N)
     rgba[:, 3] = alpha
     return rgba
+
+
+
+def xy2colors(xy, v=0.9, return_rgb=True):
+    """
+    Converts xy coordinates to colors in HSV or RGB format.
+
+    Parameters:
+    - xy (numpy.ndarray): The xy coordinates.
+    - return_rgb (bool): Flag to determine if the output should be in RGB format. Defaults to True.
+
+    Returns:
+    - numpy.ndarray: Colors in HSV or RGB format.
+    """
+    # Calculate the angles from xy coordinates
+    angles = (np.arctan2(xy[:, 1], xy[:, 0]) + np.pi) / (2 * np.pi)
+
+    # Compute the radius and normalize it
+    radius = np.hypot(xy[:, 0], xy[:, 1])
+    max_radius = np.max(radius)
+    if max_radius > 0:
+        radius = radius / max_radius
+
+    # Construct the HSV color representation
+    hsv_colors = np.vstack([angles, radius, np.ones_like(radius) * v]).T
+
+    # Convert to RGB if required
+    if return_rgb:
+        return hsv_to_rgb(hsv_colors)
+    else:
+        return hsv_colors
+
+# Remember to import numpy before using this function.
+
 
 

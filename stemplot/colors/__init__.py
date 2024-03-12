@@ -1,5 +1,6 @@
 from ._color_data import cc
 from ._colors import colors_from_lbs
+from ._colors import xy2colors
 from ._colormaps import color_palette
 from ._colormaps import color_mix
 from ._colormaps import get_cmap_from_colors
