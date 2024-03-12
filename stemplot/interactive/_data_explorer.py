@@ -67,7 +67,7 @@ class DataExplorer:
 
             if self.mode is None:
                 pass
-            elif self.mode is 'mean':
+            elif self.mode == 'mean':
                 data_mean = self.data[self.ind].mean(axis=0)
                 _update_data(self.ax_patch, data_mean, self.plot_type)
 
