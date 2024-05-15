@@ -5,25 +5,30 @@ from sklearn.utils import check_array
 class DataSlicer:
     def __init__(self, ax, data, **kwargs):
         self.ax = ax
-        self.data = np.asarray(data)
+        self.data = data
         self.kwargs = kwargs
         self.ind = 0
 
-        if self.data.ndim == 1 or (self.data.ndim == 2 and isinstance(self.data[0], (list, np.ndarray))):
-            self.plot_type = 'points'
+        self.plot_type = self._get_plot_type()
+
+        if self.plot_type == 'points':
             self._init_points()
-        elif self.data.ndim == 2:
-            self.plot_type = 'lines'
+        elif self.plot_type == 'lines':
             self._init_lines()
-        elif self.data.ndim == 3:
-            self.plot_type = 'images'
+        elif self.plot_type == 'images':
             self._init_images()
-        else:
-            raise ValueError("DataSlicer supports 1D points, 2D lines, or 3D images.")
 
         self.num_slices = len(self.data)
         self._update_xlabel()
         self.cid = self.ax.figure.canvas.mpl_connect('key_press_event', self.press_key)
+
+    def _get_plot_type(self):
+        if self.data[0].ndim == 2 and self.data[0].shape[1] == 2:
+            return 'points'
+        elif self.data[0].ndim == 1:
+            return 'lines'
+        else:
+            return 'images'
 
     def _init_points(self):
         self.artist = self.ax.scatter(self.data[0][:, 0], self.data[0][:, 1], **self.kwargs)

@@ -21,7 +21,7 @@ class _LazyLoader:
         return dir(module)
 
 # Setup lazy loading for sub-packages.
-color = _LazyLoader('stemplot.colors')
+colors = _LazyLoader('stemplot.colors')
 arrows = _LazyLoader('stemplot.arrows')
 layout = _LazyLoader('stemplot.layout')
 
@@ -33,6 +33,8 @@ from stemplot.patches._polygon import ax_add_gradient_polygon
 from stemplot.utils._plot_density import plot_density
 from stemplot.interactive._data_explorer import interactive_data
 from stemplot.interactive._data_slicer import imshow
+from stemplot.interactive._data_slicer import plot
+from stemplot.utils._plot_pca import plot_pca
 
 
 __all__ = ['colors',
@@ -43,5 +45,7 @@ __all__ = ['colors',
            'ax_add_gradient_polygon',
            'plot_density',
            'interactive_data',
-           'imshow'
+           'imshow',
+           'plot',
+           'plot_pca',
            ]
