@@ -35,6 +35,7 @@ from stemplot.interactive._data_explorer import interactive_data
 from stemplot.interactive._data_slicer import imshow
 from stemplot.interactive._data_slicer import plot
 from stemplot.utils._plot_pca import plot_pca
+from stemplot.utils._plot_image import plot_image
 
 
 __all__ = ['colors',
@@ -48,4 +49,5 @@ __all__ = ['colors',
            'imshow',
            'plot',
            'plot_pca',
+           'plot_image',
            ]
