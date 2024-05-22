@@ -1,3 +1,5 @@
+![Logo](images/logo_h.png)
+
 # stemplot: plot and visualization code for scientific publication.
 
 Welcome to **stemplot**, a powerful and user-friendly tool designed for creating high-quality plots and visualizations suitable for scientific publications.
