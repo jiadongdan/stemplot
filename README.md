@@ -1,4 +1,4 @@
-![Logo](images/logo_h.png)
+![Logo](logo/logo_h.png)
 
 # stemplot: plot and visualization code for scientific publication.
 
