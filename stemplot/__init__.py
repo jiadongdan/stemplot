@@ -36,6 +36,7 @@ from stemplot.interactive._data_slicer import imshow
 from stemplot.interactive._data_slicer import plot
 from stemplot.utils._plot_pca import plot_pca
 from stemplot.utils._plot_image import plot_image
+from stemplot.external import plot_chord_diagram
 
 
 __all__ = ['colors',
@@ -50,4 +51,5 @@ __all__ = ['colors',
            'plot',
            'plot_pca',
            'plot_image',
+           'plot_chord_diagram',
            ]

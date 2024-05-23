@@ -12,7 +12,8 @@ setup(
     packages=find_packages(),
     install_requires=[
         'numpy>=1.18.0',
-        'matplotlib>=3.1.0'
+        'matplotlib>=3.1.0',
+        'mpl_chord_diagram',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
