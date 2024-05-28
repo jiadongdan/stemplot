@@ -1,5 +1,5 @@
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 def plot_heatmap(data, ax=None, grid=None, grid_kw={}, ticks=True, texts=False, reorder=True, **kwargs):
     if ax is None:
