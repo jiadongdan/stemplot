@@ -30,6 +30,8 @@ layout = _LazyLoader('stemplot.layout')
 from stemplot.colors._colors import colors_from_lbs  # Assuming colors_from_lbs is lightweight
 from stemplot.layout._layout import h_axes
 from stemplot.patches._polygon import ax_add_gradient_polygon
+from stemplot.patches._fancybox import fig_add_fancybox
+from stemplot.patches._fancybox import ax_add_fancybox
 from stemplot.utils._plot_density import plot_density
 from stemplot.interactive._data_explorer import interactive_data
 from stemplot.interactive._data_slicer import imshow
@@ -52,4 +54,6 @@ __all__ = ['colors',
            'plot_pca',
            'plot_image',
            'plot_chord_diagram',
+           'fig_add_fancybox',
+           'ax_add_fancybox',
            ]

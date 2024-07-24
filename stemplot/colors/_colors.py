@@ -22,6 +22,15 @@ def to_hex(colors, keep_alpha=False):
     return hex
 
 
+def generate_colors_from_lbs(lbs, colors=None):
+    if colors is None:
+        colors = np.array(tab20)
+    else:
+        colors = np.array(colors)
+    lbs = np.array(lbs) % len(colors)
+    return colors[lbs]
+
+
 # this function is frequnetly used !!!
 def colors_from_lbs(lbs, colors=None, xy=None, alpha_min=0.5):
     if colors is None:

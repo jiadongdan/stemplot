@@ -3,5 +3,3 @@ from mpl_chord_diagram import chord_diagram as plot_chord_diagram
 
 __all__ = ['plot_chord_diagram',
            ]
-
-

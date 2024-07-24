@@ -1,5 +1,5 @@
 from matplotlib.patches import FancyBboxPatch
-from stemplot._axes import get_ax_aspect, get_fig_aspect
+from stemplot.layout._utils import get_fig_aspect,  get_ax_aspect
 
 
 def ax_add_fancybox(ax, p1, p2, pad=0.03, transform='data', **kwargs):
@@ -44,3 +44,13 @@ def fig_add_fancybox(fig, p1, p2, pad=0.03, **kwargs):
     fancybox = FancyBboxPatch((x0, y0), w, h, boxstyle=boxstyle, mutation_aspect=aspect_ratio,
                               transform=fig.transFigure, **kwargs)
     fig.add_artist(fancybox)
+
+
+def ax2fancybox(ax, pad=0.03, **kwargs):
+    fig = ax.figure
+    aspect_ratio = get_fig_aspect(fig)
+    x1, y1, x2, y2 = ax.get_position().extents
+    p1 = (x1+pad, y1+pad * aspect_ratio)
+    p2 = (x2-pad, y2-pad * aspect_ratio)
+    fig_add_fancybox(fig, p1, p2, pad=pad, **kwargs)
+    #ax.axis('off')
