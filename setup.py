@@ -6,7 +6,7 @@ setup(
     author='Jiadong Dan',
     author_email='jiadong.dan@u.nus.edu',
     description='A Python library for scientific plot',
-    long_description=open('README.md').read(),
+    #long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/jiadongdan/stemplot',
     packages=find_packages(),
