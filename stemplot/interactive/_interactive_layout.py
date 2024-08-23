@@ -64,7 +64,10 @@ class InteractiveCluster:
         self.ax_cluster = fig.axes[1]
         self.ax_patch = fig.axes[2]
 
-        self.lbs_ = lbs.copy()
+        if lbs is None:
+            self.lbs_ = np.array([0] * len(X))
+        else:
+            self.lbs_ = lbs.copy()
         # use generate_colors_from_lbs, colors_from_lbs will not work, colors_from_lbs will produce rgba array, np.unique function will make it not working
         self.colors = generate_colors_from_lbs(self.lbs_)
 
@@ -116,7 +119,9 @@ class InteractiveCluster:
             else:
                 p = self.ps[self.ind].mean(axis=0)
             _update_mean_patch(self.ax_patch, p, cmap=color_palette(c), clip=self.clip)
-            self.fig.canvas.draw_idle()
+            # if draw_idle() is used, lasso path will be destroyed. To keep the lasso path, use draw()
+            self.fig.canvas.draw()
+            # self.fig.canvas.draw_idle()
 
     def press_key(self, event):
         if event.key == "enter":

@@ -1,3 +1,5 @@
+import numpy as np
+
 def get_size_inches(ax):
     """
     Calculate the size of an Axes object in inches.
@@ -42,3 +44,20 @@ def get_fig_aspect(fig):
     """
     fig_w, fig_h = fig.get_size_inches()
     return fig_w / fig_h
+
+
+def ax_off(axes, keep_spline=True):
+    # ax_off() is preferred, since ax.axis('off') disallows ax.set_xlabels() to display
+    if not np.iterable(axes):
+        axes = [axes, ]
+    for ax in axes:
+        # remove ticks
+        ax.set_xticks([])
+        ax.set_yticks([])
+        # remove tick labels
+        ax.xaxis.set_ticklabels([])
+        ax.yaxis.set_ticklabels([])
+        # remove spline
+        if not keep_spline:
+            for axis in ['top', 'bottom', 'left', 'right']:
+                ax.spines[axis].set_visible(False)
