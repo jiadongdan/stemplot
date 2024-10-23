@@ -50,8 +50,6 @@ class DataExplorer:
             self.ax_cluster.text(x, y, s=e, transform=self.ax_cluster.transData)
         self.ax_cluster.axis('equal')
 
-
-
         self.ind = None
         self.xy_selected = None
 
@@ -61,15 +59,12 @@ class DataExplorer:
 
     def onselect(self, event):
         path = Path(event)
-        self.ind = np.nonzero(path.contains_points(self.X))[0]
+        self.ind = np.nonzero(path.contains_points(self.xy))[0]
         if self.ind.size != 0:
             self.xy_selected = self.xy[self.ind]
 
-            if self.mode is None:
-                pass
-            elif self.mode == 'mean':
-                data_mean = self.data[self.ind].mean(axis=0)
-                _update_data(self.ax_patch, data_mean, self.plot_type)
+            data_mean = self.data[self.ind].mean(axis=0)
+            _update_data(self.ax_patch, data_mean, self.plot_type)
 
             self.fig.canvas.draw_idle()
 

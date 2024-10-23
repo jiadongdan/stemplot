@@ -59,7 +59,7 @@ def colors_from_cmap(cmap, num=10, low=0., high=1., alpha=1.):
 
 
 
-def xy2colors(xy, v=0.9, return_rgb=True):
+def xy2colors(xy, v=0.9, h=None, s=None, return_rgb=True):
     """
     Converts xy coordinates to colors in HSV or RGB format.
 
@@ -71,13 +71,19 @@ def xy2colors(xy, v=0.9, return_rgb=True):
     - numpy.ndarray: Colors in HSV or RGB format.
     """
     # Calculate the angles from xy coordinates
-    angles = (np.arctan2(xy[:, 1], xy[:, 0]) + np.pi) / (2 * np.pi)
+    if h is None:
+        angles = (np.arctan2(xy[:, 1], xy[:, 0]) + np.pi) / (2 * np.pi)
+    else:
+        angles = np.array([1.]*len(xy)) * h
 
     # Compute the radius and normalize it
-    radius = np.hypot(xy[:, 0], xy[:, 1])
-    max_radius = np.max(radius)
-    if max_radius > 0:
-        radius = radius / max_radius
+    if s is None:
+        radius = np.hypot(xy[:, 0], xy[:, 1])
+        max_radius = np.max(radius)
+        if max_radius > 0:
+            radius = radius / max_radius
+    else:
+        radius = np.array([1.] * len(xy)) * s
 
     # Construct the HSV color representation
     hsv_colors = np.vstack([angles, radius, np.ones_like(radius) * v]).T
@@ -89,6 +95,3 @@ def xy2colors(xy, v=0.9, return_rgb=True):
         return hsv_colors
 
 # Remember to import numpy before using this function.
-
-
-
