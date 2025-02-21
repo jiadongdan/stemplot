@@ -67,7 +67,8 @@ def get_top_from_axes(axes, vspace=0.25):
     Returns:
     - The calculated top position for the new axes.
     """
-    if not axes:
+    axes = np.asarray(axes)
+    if axes.size == 0:
         raise ValueError("The 'axes' list is empty. Please provide valid Matplotlib axes objects.")
 
     # Extract the vertical positions and heights of the axes

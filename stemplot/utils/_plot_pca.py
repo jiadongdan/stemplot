@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+from ..colors._colors import generate_colors_from_lbs
 
 
 def _generate_colors(lbs, color_cycle=None):
@@ -11,13 +12,13 @@ def _generate_colors(lbs, color_cycle=None):
         colors= [color_cycle[e] for e in lbs]
     return colors
 
-def plot_pca(X, dim=2, lbs=None, colors=None, **kwargs):
+def plot_pca(X, dim=2, lbs=None, colors=None, cmap='coolwarm', **kwargs):
     if len(X.shape) == 3:
         data = X.reshape(X.shape[0], -1)
     elif len(X.shape) == 2:
         data = X
     X_pca = PCA(n_components=dim).fit_transform(data)
-    colors = _generate_colors(lbs, colors)
+    colors = generate_colors_from_lbs(lbs, colors, cmap)
     if 's' or 'size' not in kwargs:
         kwargs['s'] = 1
     if dim == 2:
