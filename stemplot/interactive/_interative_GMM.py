@@ -9,35 +9,30 @@ from ..colors._colors import generate_colors_from_lbs
 from ..colors._colors import to_hex
 from ..colors._colormaps import color_palette
 
-
-#from skimage.feature import register_translation
 from skimage.registration import phase_cross_correlation
 from skimage.morphology import disk
 from skimage.transform import rotate, warp_polar
 from sklearn.utils import check_random_state
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.decomposition import PCA
+from sklearn.mixture import GaussianMixture
 
-def get_angle(img1, img2):
-    mask = disk(img1.shape[0]//2)
-    img1_rot = warp_polar(img1*mask)
-    img2_rot = warp_polar(img2*mask)
-    shifts, error, phasediff = phase_cross_correlation(img1_rot, img2_rot, upsample_factor=20)
-    return shifts[0]
+def normalize(x, low=0., high=1.):
+    return (x - x.min())/(x.max() - x.min())
+def string_to_number(input_str):
+    if input_str in ['0', '1']:
+        return int(input_str)
+    elif input_str in ['b',]:
+        return -1
 
-def _register_imgs(imgs):
-    ref = imgs[0]
-    for i, img in enumerate(imgs):
-        a = get_angle(img, ref)
-        img_rot = rotate(img, angle=a, order=1)
-        ref = (ref*(i+1) + img_rot)/(i+2)
-    return ref
+def pca(data):
+    aa = PCA(n_components=2)
+    res = aa.fit_transform(data)
+    return res
 
-def register_imgs(imgs, max_samples=15, seed=48):
-    if len(imgs) > max_samples:
-        rng = check_random_state(seed=seed)
-        mask = rng.choice(len(imgs), max_samples, replace=False)
-        imgs = imgs[mask]
-    return _register_imgs(imgs)
-
+def labels_to_colors(lbs):
+    three_colors = np.array(['#1f77b4', '#ff7f0e', '#2d3742'])
+    return three_colors[lbs]
 
 def _update_pts(ax, pts, **kwargs):
     if ax.collections: # ax.collections is not empty
@@ -56,28 +51,40 @@ def _update_mean_patch(ax, p, cmap, clip=True):
         c = plt.Circle((p.shape[0] / 2 - 0.25, p.shape[1] / 2 - 0.25), radius=p.shape[0] / 2, transform=ax.transData)
         ax.images[0].set_clip_path(c)
 
+def _update_color(ax, colors):
+    """
+    Update scatter plot colors.
+    If colors are numerical values, updates colormap.
+    If colors are valid matplotlib color names or RGB tuples, updates facecolor.
+    Raises a ValueError if no scatter plot is found.
+    """
+    if not ax.collections:
+        raise ValueError("No scatter plot found in the given axis.")
 
-class InteractiveCluster:
+    sc = ax.collections[0]  # Get scatter plot object
+    if isinstance(colors, (list, np.ndarray)) and isinstance(colors[0], (int, float)):
+        sc.set_array(np.array(colors))  # Update colormap values
+    else:
+        sc.set_color(colors)  # Update explicit colors
 
-    def __init__(self, fig, X, img, pts, ps, lbs, clip=True, max_samples=15, rotate=False, **kwargs):
+class BinaryGMMLabelling:
+
+    def __init__(self, fig, X, img, pts, ps, lbs, clip=True, **kwargs):
+        xy = pca(X)
+
         self.fig = fig
         self.ax_img = fig.axes[0]
         self.ax_cluster = fig.axes[1]
         self.ax_patch = fig.axes[2]
 
         if lbs is None:
-            self.lbs_ = np.array([0] * len(X))
+            self.lbs_ = np.array([-1] * len(pts))
         else:
             self.lbs_ = lbs.copy()
         # use generate_colors_from_lbs, colors_from_lbs will not work, colors_from_lbs will produce rgba array, np.unique function will make it not working
-        colors = generate_colors_from_lbs(self.lbs_)
-        # convert to hex color
-        self.colors = to_hex(colors)
+        self.colors = labels_to_colors(self.lbs_)
 
-        self.path_collection = self.ax_cluster.scatter(X[:, 0], X[:, 1], c=self.colors, **kwargs)
-        for e in np.unique(self.lbs_):
-            x, y = X[self.lbs_ == e].mean(axis=0)
-            self.ax_cluster.text(x, y, s=e, transform=self.ax_cluster.transData)
+        self.path_collection = self.ax_cluster.scatter(xy[:, 0], xy[:, 1], c=self.colors, **kwargs)
         self.ax_cluster.axis('equal')
         self.ax_img.imshow(img)
         self.ax_img.axis('off')
@@ -87,13 +94,12 @@ class InteractiveCluster:
         self.img = img
         self.pts = pts
         self.X = X
+        self.xy = xy
         self.ps = ps
         self.clip = clip
-        self.max_samples = max_samples
-        self.rotate = rotate
 
         self.ind = None
-        self.X_selected = None
+        self.xy_selected = None
         self.pts_selected = None
 
         self.lbs = np.array(len(self.pts) * [-1])
@@ -101,14 +107,14 @@ class InteractiveCluster:
         self.num_clusters = 0
 
         self.lasso = LassoSelector(self.ax_cluster, onselect=self.onselect)
-        self.press = self.fig.canvas.mpl_connect("key_press_event", self.press_key)
+        self.press = self.fig.canvas.mpl_connect("key_press_event", self.assign_labels)
 
     def onselect(self, event):
         path = Path(event)
-        self.ind = np.nonzero(path.contains_points(self.X))[0]
+        self.ind = np.nonzero(path.contains_points(self.xy))[0]
         if self.ind.size != 0:
             self.pts_selected = self.pts[self.ind]
-            self.X_selected = self.X[self.ind]
+            self.xy_selected = self.xy[self.ind]
 
             # mode now only support numeric type
             #c = mode(self.colors[self.ind])[0][0]
@@ -117,25 +123,38 @@ class InteractiveCluster:
             # update pts
             _update_pts(self.ax_img, self.pts_selected, color='r', s=3)
             # update mean patch
-            if self.rotate:
-                p = register_imgs(self.ps[self.ind], self.max_samples)
-            else:
-                p = self.ps[self.ind].mean(axis=0)
+            p = self.ps[self.ind].mean(axis=0)
             _update_mean_patch(self.ax_patch, p, cmap=color_palette(c), clip=self.clip)
             # if draw_idle() is used, lasso path will be destroyed. To keep the lasso path, use draw()
             self.fig.canvas.draw()
             # self.fig.canvas.draw_idle()
 
-    def press_key(self, event):
-        if event.key == "enter":
-            if self.ind.any():
-                self.lbs[self.ind] = self.num_clusters
-                self.num_clusters += 1
+    # assign labels
+    def assign_labels(self, event):
+        if event.key in ["0", "1",]:
+            if self.ind.any(): # seld.ind is NOT empty
+                self.lbs[self.ind] = string_to_number(event.key)
+                # update colors
+                _update_color(self.ax_cluster, labels_to_colors(self.lbs))
+                self.fig.canvas.draw_idle()
                 print("One cluster has been selected.")
+        elif event.key in ["enter",]:
+
+            mask0 = self.lbs == 0
+            mask1 = self.lbs == 1
+
+            X0 = self.X[mask0]
+            X1 = self.X[mask1]
+            gmm0 = GaussianMixture(n_components=1, random_state=None).fit(X0)
+            gmm1 = GaussianMixture(n_components=1, random_state=None).fit(X1)
+            log_prob_0 = gmm0.score_samples(self.X)
+            log_prob_1 = gmm1.score_samples(self.X)
+            self.lbs[log_prob_0 >= log_prob_1] = 0
+            self.lbs[log_prob_0 < log_prob_1] = 1
 
 
-def interactive_clusters(X, img, pts, ps, lbs=None, clip=True, max_samples=15, rotate=False, **kwargs):
+def interactive_gmm(X, img, pts, ps, lbs=None, clip=True, **kwargs):
     fig, ax = plt.subplots(1, 3, figsize=(12, 4))
-    app = InteractiveCluster(fig, X, img, pts, ps, lbs, clip, max_samples, rotate, **kwargs)
+    app = BinaryGMMLabelling(fig, X, img, pts, ps, lbs, clip, **kwargs)
     return app
 

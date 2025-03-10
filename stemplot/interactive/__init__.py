@@ -7,7 +7,10 @@ from ._data_slicer import scatter
 from ._interactive_layout import InteractiveCluster
 from ._interactive_layout import interactive_clusters
 from ._interactive_spectra import interactive_spectra
-
+from ._data_labelling import BinaryDataLabelling
+from ._data_labelling import interactive_binary
+from ._interative_GMM import BinaryGMMLabelling
+from ._interative_GMM import interactive_gmm
 
 
 __all__ = ['interactive_data',
@@ -17,4 +20,8 @@ __all__ = ['interactive_data',
            'InteractiveCluster',
            'interactive_clusters',
            'interactive_spectra',
+           'BinaryDataLabelling',
+           'interactive_binary',
+           'BinaryGMMLabelling',
+           'interactive_gmm',
            ]

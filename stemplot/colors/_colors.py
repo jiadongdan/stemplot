@@ -20,8 +20,8 @@ def to_rgb(colors):
     return rgba[:, 0:3]
 
 def to_hex(colors, keep_alpha=False):
-    hex = np.array([mc.to_hex(c, keep_alpha=keep_alpha) for c in colors if mc.is_color_like(c)])
-    return hex
+    hex_color = np.array([mc.to_hex(c, keep_alpha=keep_alpha) for c in colors if mc.is_color_like(c)])
+    return hex_color
 
 def generate_colors_from_lbs(lbs, colors=None, cmap='coolwarm'):
     """
