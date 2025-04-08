@@ -11,6 +11,8 @@ from ._data_labelling import BinaryDataLabelling
 from ._data_labelling import interactive_binary
 from ._interative_GMM import BinaryGMMLabelling
 from ._interative_GMM import interactive_gmm
+from ._interactive_GMM_single import interactive_gmm1
+from ._interactive_patch_size import interactive_patch_size
 
 
 __all__ = ['interactive_data',
@@ -24,4 +26,6 @@ __all__ = ['interactive_data',
            'interactive_binary',
            'BinaryGMMLabelling',
            'interactive_gmm',
+           'interactive_gmm1',
+           'interactive_patch_size',
            ]

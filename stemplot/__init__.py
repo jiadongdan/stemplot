@@ -41,6 +41,13 @@ from stemplot.utils._plot_image import plot_image
 from stemplot.external import plot_chord_diagram
 
 
+from matplotlib import rcParams
+from .style.rc1 import rc1
+from .style.utils import set_style
+
+# Automatically apply rc settings on import
+rcParams.update(rc1)
+
 __all__ = ['colors',
            'arrows',
            'layout',
@@ -56,4 +63,5 @@ __all__ = ['colors',
            'plot_chord_diagram',
            'fig_add_fancybox',
            'ax_add_fancybox',
+           'set_style',
            ]

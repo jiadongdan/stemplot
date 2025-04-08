@@ -67,7 +67,7 @@ def _update_color(ax, colors):
     else:
         sc.set_color(colors)  # Update explicit colors
 
-class BinaryGMMLabelling:
+class BinaryGMMLabelling1:
 
     def __init__(self, fig, X, img, pts, ps, lbs, clip=True, **kwargs):
         xy = pca(X)
@@ -105,7 +105,7 @@ class BinaryGMMLabelling:
 
         self.lbs = np.array(len(self.X) * [-1])
 
-        self.num_clusters = 0
+        self.gmm = None
 
         self.lasso = LassoSelector(self.ax_cluster, onselect=self.onselect)
         self.press = self.fig.canvas.mpl_connect("key_press_event", self.assign_labels)
@@ -143,21 +143,27 @@ class BinaryGMMLabelling:
                 print("One cluster has been selected.")
         elif event.key in ["enter",]:
 
-            mask0 = self.lbs == 0
-            mask1 = self.lbs == 1
+            valid_indices = self.lbs != -1  # Ignore points labeled as -1
+            X_labeled = self.X[valid_indices]
+            y_labeled = self.lbs[valid_indices]
 
-            X0 = self.X[mask0]
-            X1 = self.X[mask1]
-            gmm0 = GaussianMixture(n_components=1, random_state=None).fit(X0)
-            gmm1 = GaussianMixture(n_components=1, random_state=None).fit(X1)
-            log_prob_0 = gmm0.score_samples(self.X)
-            log_prob_1 = gmm1.score_samples(self.X)
-            self.lbs[log_prob_0 >= log_prob_1] = 0
-            self.lbs[log_prob_0 < log_prob_1] = 1
+            # Compute initial parameters only for valid clusters
+            unique_labels = np.unique(y_labeled)
+            n_components = len(unique_labels)
+            means_init = np.array([X_labeled[y_labeled == i].mean(axis=0) for i in unique_labels])
+            covariances_init = np.array([np.cov(X_labeled[y_labeled == i], rowvar=False) for i in unique_labels])
+            weights_init = np.array([np.sum(y_labeled == i) / len(X_labeled) for i in unique_labels])
 
+            self.gmm = GaussianMixture(n_components=n_components,
+                                  means_init=means_init,
+                                  weights_init=weights_init,
+                                  covariance_type='full',
+                                  init_params="random",
+                                  random_state=None)
+            self.gmm.fit(self.X)
 
-def interactive_gmm(X, img, pts, ps, lbs=None, clip=True, **kwargs):
+def interactive_gmm1(X, img, pts, ps, lbs=None, clip=True, **kwargs):
     fig, ax = plt.subplots(1, 3, figsize=(12, 4))
-    app = BinaryGMMLabelling(fig, X, img, pts, ps, lbs, clip, **kwargs)
+    app = BinaryGMMLabelling1(fig, X, img, pts, ps, lbs, clip, **kwargs)
     return app
 

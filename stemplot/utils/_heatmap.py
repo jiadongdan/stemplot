@@ -124,3 +124,27 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
             texts.append(text)
 
     return texts
+
+
+def plot_big_heatmap(data, ax=None, **kwargs):
+    """
+    Plots a heatmap of the given 2D array using matplotlib.
+
+    Parameters:
+    - data (ndarray): A 2D NumPy array to visualize.
+    - ax (matplotlib.axes.Axes, optional): Axis to plot on. Creates one if not provided.
+    - **kwargs: Additional keyword arguments passed to imshow (e.g., vmin, vmax, cmap).
+    """
+    if ax is None:
+        fig, ax = plt.subplots()
+
+    if 'cmap' not in kwargs:
+        kwargs['cmap'] = 'viridis'
+
+    im = ax.imshow(data, aspect='equal', **kwargs)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+
+    return ax
+
