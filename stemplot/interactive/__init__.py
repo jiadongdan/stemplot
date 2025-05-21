@@ -14,7 +14,7 @@ from ._interative_GMM import interactive_gmm
 from ._interactive_GMM_single import interactive_gmm1
 from ._interactive_patch_size import interactive_patch_size
 from ._interactive_gmm_oversampling import interactive_gmm2
-from ._interactive_threshold import interactive_t
+from ._interactive_t import interactive_t
 
 
 __all__ = ['interactive_data',

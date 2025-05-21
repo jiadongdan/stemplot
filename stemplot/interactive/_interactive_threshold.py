@@ -162,7 +162,6 @@ class BinaryThreshold:
             ps1 = self.ps[self.lbs == 1]
             size = ps0.shape[1]//2
             v = self.ps[:, size-1:size+2, size-1:size+2].mean(axis=(1,2))
-            print(v.shape)
             v0 = ps0[:, size-1:size+2, size-1:size+2].mean(axis=(1,2))
             v1 = ps1[:, size-1:size+2, size-1:size+2].mean(axis=(1,2))
             v0_mean = v0.mean()
@@ -173,9 +172,11 @@ class BinaryThreshold:
             # self.t = np.minimum(v0.mean()/2., v1.mean()) * (1+self.alpha)
             bg = 2*v1_mean - v0_mean
             t = ((v0_mean - bg)+ (v1_mean - bg)) /2.
-            print(t)
             self.t = (v1_std * (v0_mean - bg)+ v0_std * (v1_mean - bg)) / (v0_std + v1_std)
-            print(self.t)
+            print('v0_mean: {}'.format(v0_mean))
+            print('v1_mean: {}'.format(v1_mean))
+            print('threshold 1: {}'.format(t))
+            print('threshold 2: {}'.format(self.t))
             self.lbs[v > self.t] = 0
             self.lbs[v < self.t] = 1
 
