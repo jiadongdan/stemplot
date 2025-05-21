@@ -1,7 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
+from sklearn.decomposition import PCA
 
+def pca(data, n_components=2):
+    aa = PCA(n_components=n_components)
+    res = aa.fit_transform(data)
+    return res
 class InteractiveThreshold:
 
     def __init__(self, fig, X, img, pts, ps, n_bins=30, **kwargs):
