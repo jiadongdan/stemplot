@@ -21,7 +21,7 @@ def color_palette(name, low=0., high=1., N=256):
         palette = np.array([colorsys.hls_to_rgb(*(hls[0], i, hls[2])) for i in np.linspace(low, high, N)])
         cmap = mc.ListedColormap(palette)
     elif is_cmap(name):
-        cmap = plt.cm.get_cmap(name)
+        cmap = plt.get_cmap(name)
     else:
         raise ValueError('name is NOT a valid colormap or color name.')
     return cmap
