@@ -5,6 +5,7 @@ from ._heatmap import plot_heatmap
 from ._heatmap import annotate_heatmap
 from ._heatmap import plot_big_heatmap
 from ._plot_compare import plot_compare
+from ._plot_bar import plot_bar
 
 __all__ = ['plot_density',
            'plot_pca',
@@ -13,4 +14,5 @@ __all__ = ['plot_density',
            'plot_big_heatmap',
            'annotate_heatmap',
            'plot_compare',
+           'plot_bar',
            ]

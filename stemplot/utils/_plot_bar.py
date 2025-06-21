@@ -1,3 +1,4 @@
+import numpy as np
 def plot_bar(ax, data, labels, orientation='horizontal', bar_gap=0.2, **kwargs):
     """
     Plot a bar chart on the given Axes (ax), defaulting to a horizontal bar chart.
