@@ -1,42 +1,43 @@
-# font settings
-font.family : sans-serif
-font.sans-serif : Helvetica, Arial, DejaVu Sans
-pdf.fonttype : 42
-ps.fonttype : 42
+# Font
+font.family        : sans-serif       # family
+font.sans-serif    : Helvetica, Arial, DejaVu Sans  # fallback list
+pdf.fonttype       : 42               # TrueType embed in PDF
+ps.fonttype        : 42               # TrueType embed in PS
 
-# mathtext: use custom and assign Helvetica
-mathtext.fontset : custom
-mathtext.rm : Helvetica
-mathtext.it : Helvetica:italic
-mathtext.bf : Helvetica:bold
-mathtext.cal : Helvetica
+# Math
+mathtext.fontset   : custom           # custom math fonts
+mathtext.rm        : Helvetica        # upright math
+mathtext.it        : Helvetica:italic # italic math
+mathtext.bf        : Helvetica:bold   # bold math
+mathtext.cal       : Helvetica        # calligraphic math
 
-# ticks
-xtick.direction : in
-xtick.major.size : 2
-xtick.major.width : 0.5
-xtick.minor.size : 1
-xtick.minor.width : 0.5
-xtick.minor.visible : True
-xtick.labelsize : 6
+# X ticks
+xtick.direction    : in               # inside plot
+xtick.major.size   : 2                # major tick length (pt)
+xtick.major.width  : 0.5              # major tick width (pt)
+xtick.minor.size   : 1                # minor tick length (pt)
+xtick.minor.width  : 0.5              # minor tick width (pt)
+xtick.minor.visible: True             # show minor ticks
+xtick.labelsize    : 6                # tick label font size (pt)
 
-ytick.direction : in
-ytick.major.size : 2
-ytick.major.width : 0.5
-ytick.minor.size : 1
-ytick.minor.width : 0.5
-ytick.minor.visible : True
-ytick.labelsize : 6
+# Y ticks
+ytick.direction    : in
+ytick.major.size   : 2                # major tick length (pt)
+ytick.major.width  : 0.5              # major tick width (pt)
+ytick.minor.size   : 1                # minor tick length (pt)
+ytick.minor.width  : 0.5              # minor tick width (pt)
+ytick.minor.visible: True             # show minor ticks
+ytick.labelsize    : 6                # tick label font size (pt)
 
-# axes & grid
-axes.labelsize : 10
-axes.linewidth : 0.5
-grid.linewidth : 0.5
-lines.linewidth : 1.0
+# Axes & grid
+axes.labelsize     : 10               # axis label font size (pt)
+axes.linewidth     : 0.5              # axis spine width (pt)
+grid.linewidth     : 0.5              # grid line width (pt)
+lines.linewidth    : 1.0              # default plot line width (pt)
 
-# legend
-legend.frameon : False
-legend.fontsize : 8
+# Legend
+legend.frameon     : False            # no box around legend
+legend.fontsize    : 8                # legend text size (pt)
 
-# unicode minus
-axes.unicode_minus : True
+# Misc
+axes.unicode_minus : True             # use Unicode minus sign
