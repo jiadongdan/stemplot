@@ -7,6 +7,7 @@ from ._heatmap import plot_big_heatmap
 from ._plot_compare import plot_compare
 from ._plot_bar import plot_bar
 from ._save_fig import save_fig
+from ._plot_confusion_matrix import plot_confusion_matrix
 
 __all__ = ['plot_density',
            'plot_pca',
@@ -17,4 +18,5 @@ __all__ = ['plot_density',
            'plot_compare',
            'plot_bar',
            'save_fig',
+           'plot_confusion_matrix',
            ]
