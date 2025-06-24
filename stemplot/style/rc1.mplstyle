@@ -30,7 +30,7 @@ ytick.minor.visible: True             # show minor ticks
 ytick.labelsize    : 6                # tick label font size (pt)
 
 # Axes & grid
-axes.labelsize     : 10               # axis label font size (pt)
+axes.labelsize     : 8                # axis label font size (pt)
 axes.linewidth     : 0.5              # axis spine width (pt)
 grid.linewidth     : 0.5              # grid line width (pt)
 lines.linewidth    : 1.0              # default plot line width (pt)

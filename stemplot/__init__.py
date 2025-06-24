@@ -39,7 +39,7 @@ from stemplot.interactive._data_slicer import plot
 from stemplot.utils._plot_pca import plot_pca
 from stemplot.utils._plot_image import plot_image
 from stemplot.external import plot_chord_diagram
-
+from stemplot.utils import save_fig
 
 #from matplotlib import rcParams
 #from .style.rc1 import rc1
@@ -64,4 +64,5 @@ __all__ = ['colors',
            'ax_add_fancybox',
            'set_style',
            'reset_style',
+           'save_fig',
            ]
