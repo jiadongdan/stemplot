@@ -24,6 +24,7 @@ class _LazyLoader:
 colors = _LazyLoader('stemplot.colors')
 arrows = _LazyLoader('stemplot.arrows')
 layout = _LazyLoader('stemplot.layout')
+io = _LazyLoader('stemplot.io')
 
 # Explicit imports for frequently used functions or classes
 # These are assumed to be lightweight and commonly used enough to justify immediate loading.
@@ -50,6 +51,7 @@ from .style.utils import set_style, reset_style
 __all__ = ['colors',
            'arrows',
            'layout',
+           'io',
            'colors_from_lbs',
            'h_axes',
            'ax_add_gradient_polygon',
