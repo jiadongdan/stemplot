@@ -135,7 +135,7 @@ class BinaryGMMLabelling:
     # assign labels
     def assign_labels(self, event):
         if event.key in ["0", "1",]:
-            if self.ind.any(): # seld.ind is NOT empty
+            if self.ind.size != 0: # seld.ind is NOT empty
                 self.lbs[self.ind] = string_to_number(event.key)
                 # update colors
                 _update_color(self.ax_cluster, labels_to_colors(self.lbs))
