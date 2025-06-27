@@ -61,3 +61,8 @@ def ax_off(axes, keep_spline=True):
         if not keep_spline:
             for axis in ['top', 'bottom', 'left', 'right']:
                 ax.spines[axis].set_visible(False)
+
+def remove_axis_top_right(ax):
+    # set spine visibility
+    for axis in ['top', 'right']:
+        ax.spines[axis].set_visible(False)

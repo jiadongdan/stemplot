@@ -51,7 +51,7 @@ def save_fig(fig, filepath='fig.png', dpi=300, transparent=None, format=None, **
         'dpi': dpi,
         'transparent': transparent_flag,
         'bbox_inches': 'tight',
-        'pad_inches': 0.0,
+        'pad_inches': 0.05,
     }
 
     if format:
