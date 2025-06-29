@@ -1,80 +1,109 @@
 import numpy as np
-def plot_bar(ax, data, labels, orientation='horizontal', bar_gap=0.2, **kwargs):
+import matplotlib.pyplot as plt
+from matplotlib.colors import Normalize
+import numpy as np
+
+def plot_bar(
+        ax,
+        data,
+        labels,
+        orientation='vertical',
+        bar_gap=0.2,
+        colors=None,
+        **kwargs
+):
     """
-    Plot a bar chart on the given Axes (ax), defaulting to a horizontal bar chart.
-    
+    Plot a bar chart on the given Axes, with optional per-legend colors.
+
     Parameters
     ----------
     ax : matplotlib.axes.Axes
-        A pre-created matplotlib Axes object (e.g., obtained via fig, ax = plt.subplots()).
-    data : np.ndarray
-        If it is a 1D array (shape = (n_labels,)), each label corresponds to a single bar.
-        If it is a 2D array (shape = (n_legends, n_labels)),
-        each label (i.e., each column) corresponds to multiple bars (one per legend).
-    labels : list
-        A list of labels for each group (or a single bar if data is 1D).
-        If data is 1D, its length should match data.
-        If data is 2D, its length should match data.shape[1], corresponding to each column as one group.
-    orientation : str, optional
-        The orientation of the bars. Defaults to 'horizontal'. Can also be 'vertical'.
-    bar_gap : float, optional
-        The gap between adjacent groups. The distance between the centers of adjacent groups is (1 + bar_gap).
-    **kwargs : dict
-        Other keyword arguments passed to matplotlib's bar or barh functions, e.g., color, edgecolor, etc.
-        You can also pass 'bar_width' here to customize the bar width.
+        Pre-created Axes object.
+    data : array_like, shape (n_labels,) or (n_legends, n_labels)
+        1D: one bar per label; 2D: one group per column, with n_legends bars each.
+    labels : list of str, length n_labels
+        The group labels.
+    orientation : {'horizontal','vertical'}
+        'horizontal' → ax.bar; 'vertical' → ax.barh.
+    bar_gap : float
+        Spacing between groups; center-to-center distance is 1+bar_gap.
+    colors : None, single color, or sequence of length n_legends
+        If None, use whatever you pass in kwargs (or default cmap). If a single
+        color or a list/array, each legend-row i will use colors[i].
+    **kwargs
+        Other bar/barh kwargs (e.g. edgecolor, alpha, linewidth).
+
     """
-    
-    # Convert data to at least 2D for uniform processing
     data = np.atleast_2d(data)
     n_legends, n_labels = data.shape
 
-    # Get bar_width from kwargs if provided, otherwise compute automatically
-    bar_width = kwargs.pop('bar_width', None)
-    if bar_width is None:
-        bar_width = 0.8 / n_legends  # default automatic calculation
-    
-    # Compute the center positions for each group on the axis
-    # The distance between adjacent group centers is (1 + bar_gap)
+    # pop out bar_width if you want custom widths
+    bar_width = kwargs.pop('bar_width', None) or (0.8 / n_legends)
+
+    # prepare colors array
+    if colors is None:
+        # rely on kwargs.get('color', None)
+        use_colors = [kwargs.pop('color', None)] * n_legends
+    else:
+        # allow single color or list of length n_legends
+        if isinstance(colors, (list, tuple, np.ndarray)):
+            if len(colors) != n_legends:
+                raise ValueError(f"colors must have length {n_legends}")
+            use_colors = colors
+        else:
+            use_colors = [colors] * n_legends
+
     group_positions = np.arange(n_labels) * (1 + bar_gap)
-    
-    # The total width occupied by all bars in a single group
-    group_width = n_legends * bar_width
-    
+    group_width     = n_legends * bar_width
+
     if orientation == 'vertical':
-        # Use ax.barh() for a vertical orientation in this code block
-        # (it might sound contradictory, but let's follow this code's logic)
+        # vertical bars: use ax.bar
         for i in range(n_legends):
-            # For the i-th row of data, compute the offset within the group
-            # The entire group is centered at group_positions, so first shift left by group_width/2
-            # Then shift right by (i+0.5)*bar_width to center each bar in its sub-interval
-            offsets = group_positions - group_width / 2 + (i + 0.5) * bar_width
-            
-            ax.barh(
-                offsets,            # y-coordinates of the bar centers
-                data[i, :],        # bar lengths
-                height=bar_width,
-                label=None,         # legend can be set via ax.legend()
-                **kwargs
-            )
-        # Set y-axis tick positions and labels
-        ax.set_yticks(group_positions)
-        ax.set_yticklabels(labels)
-    
-    elif orientation == 'horizontal':
-        # Use ax.bar() for a horizontal orientation in this code block
-        for i in range(n_legends):
-            offsets = group_positions - group_width / 2 + (i + 0.5) * bar_width
-            
+            offsets = group_positions - group_width/2 + (i+0.5)*bar_width
             ax.bar(
                 offsets,
                 data[i, :],
                 width=bar_width,
-                label=None,
+                color=use_colors[i],
                 **kwargs
             )
-        # Set x-axis tick positions and labels
         ax.set_xticks(group_positions)
         ax.set_xticklabels(labels)
-    else:
-        raise ValueError('Invalid orientation.')
 
+    elif orientation == 'horizontal':
+        # horizontal bars: use ax.barh
+        for i in range(n_legends):
+            offsets = group_positions - group_width/2 + (i+0.5)*bar_width
+            ax.barh(
+                offsets,
+                data[i, :],
+                height=bar_width,
+                color=use_colors[i],
+                **kwargs
+            )
+        ax.set_yticks(group_positions)
+        ax.set_yticklabels(labels)
+
+    else:
+        raise ValueError("orientation must be 'horizontal' or 'vertical'")
+
+
+def plot_gradient_bar(ax, heights, width=0.7, cmap='viridis'):
+    x = np.arange(len(heights))
+    grad = np.linspace(0, 1, 256).reshape(-1, 1)
+    for xi, hi in zip(x, heights):
+        ax.imshow(
+            grad,
+            extent=(xi - width/2, xi + width/2, 0, hi),
+            origin='lower',
+            aspect='auto',
+            cmap=plt.get_cmap(cmap),
+            norm=Normalize(0, 1),
+            clip_on=True,
+        )
+        ax.add_patch(plt.Rectangle(
+            (xi - width/2, 0), width, hi,
+            fill=False, edgecolor='black', linewidth=0.5
+        ))
+    ax.set_xlim(-width, len(heights)-1 + width)
+    ax.set_ylim(0, max(heights) * 1.05)

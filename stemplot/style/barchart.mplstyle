@@ -1,0 +1,43 @@
+# Font
+font.family        : sans-serif       # family
+font.sans-serif    : Helvetica, Arial, DejaVu Sans  # fallback list
+pdf.fonttype       : 42               # TrueType embed in PDF
+ps.fonttype        : 42               # TrueType embed in PS
+
+# Math
+mathtext.fontset   : custom           # custom math fonts
+mathtext.rm        : Helvetica        # upright math
+mathtext.it        : Helvetica:italic # italic math
+mathtext.bf        : Helvetica:bold   # bold math
+mathtext.cal       : Helvetica        # calligraphic math
+
+# X ticks
+xtick.direction    : out              # inside plot
+xtick.major.size   : 2                # major tick length (pt)
+xtick.major.width  : 0.5              # major tick width (pt)
+xtick.minor.size   : 1                # minor tick length (pt)
+xtick.minor.width  : 0.5              # minor tick width (pt)
+xtick.minor.visible: False            # show minor ticks
+xtick.labelsize    : 6                # tick label font size (pt)
+
+# Y ticks
+ytick.direction    : out
+ytick.major.size   : 2                # major tick length (pt)
+ytick.major.width  : 0.5              # major tick width (pt)
+ytick.minor.size   : 1                # minor tick length (pt)
+ytick.minor.width  : 0.5              # minor tick width (pt)
+ytick.minor.visible: False            # show minor ticks
+ytick.labelsize    : 6                # tick label font size (pt)
+
+# Axes & grid
+axes.labelsize     : 8                # axis label font size (pt)
+axes.linewidth     : 0.5              # axis spine width (pt)
+grid.linewidth     : 0.5              # grid line width (pt)
+lines.linewidth    : 1.0              # default plot line width (pt)
+
+# Legend
+legend.frameon     : False            # no box around legend
+legend.fontsize    : 8                # legend text size (pt)
+
+# Misc
+axes.unicode_minus : True             # use Unicode minus sign
