@@ -60,12 +60,12 @@ def plot_bar(
         # vertical bars: use ax.bar
         for i in range(n_legends):
             offsets = group_positions - group_width/2 + (i+0.5)*bar_width
-            ax.bar(
-                offsets,
-                data[i, :],
-                width=bar_width,
-                color=use_colors[i],
-                **kwargs
+            bars = ax.bar(
+                    offsets,
+                    data[i, :],
+                    width=bar_width,
+                    color=use_colors[i],
+                    **kwargs
             )
         ax.set_xticks(group_positions)
         ax.set_xticklabels(labels)
@@ -74,18 +74,20 @@ def plot_bar(
         # horizontal bars: use ax.barh
         for i in range(n_legends):
             offsets = group_positions - group_width/2 + (i+0.5)*bar_width
-            ax.barh(
-                offsets,
-                data[i, :],
-                height=bar_width,
-                color=use_colors[i],
-                **kwargs
+            bars = ax.barh(
+                    offsets,
+                    data[i, :],
+                    height=bar_width,
+                    color=use_colors[i],
+                    **kwargs
             )
         ax.set_yticks(group_positions)
         ax.set_yticklabels(labels)
 
     else:
         raise ValueError("orientation must be 'horizontal' or 'vertical'")
+
+    return bars
 
 
 def plot_gradient_bar(ax, heights, width=0.7, cmap='viridis'):

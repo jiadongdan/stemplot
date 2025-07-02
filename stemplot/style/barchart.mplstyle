@@ -18,7 +18,7 @@ xtick.major.width  : 0.5              # major tick width (pt)
 xtick.minor.size   : 1                # minor tick length (pt)
 xtick.minor.width  : 0.5              # minor tick width (pt)
 xtick.minor.visible: False            # show minor ticks
-xtick.labelsize    : 6                # tick label font size (pt)
+xtick.labelsize    : 8                # tick label font size (pt)
 
 # Y ticks
 ytick.direction    : out
@@ -27,10 +27,10 @@ ytick.major.width  : 0.5              # major tick width (pt)
 ytick.minor.size   : 1                # minor tick length (pt)
 ytick.minor.width  : 0.5              # minor tick width (pt)
 ytick.minor.visible: False            # show minor ticks
-ytick.labelsize    : 6                # tick label font size (pt)
+ytick.labelsize    : 8                # tick label font size (pt)
 
 # Axes & grid
-axes.labelsize     : 8                # axis label font size (pt)
+axes.labelsize     : 10               # axis label font size (pt)
 axes.linewidth     : 0.5              # axis spine width (pt)
 grid.linewidth     : 0.5              # grid line width (pt)
 lines.linewidth    : 1.0              # default plot line width (pt)
