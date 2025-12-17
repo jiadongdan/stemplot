@@ -51,6 +51,8 @@ class Cursor(AxesWidget):
         self.background = None
         self.needclear = False
 
+        self.pts = []
+
     def clear(self, event):
         """clear the cursor"""
         if self.ignore(event):
@@ -87,6 +89,7 @@ class Cursor(AxesWidget):
 
     def onclick(self, event):
         x, y = event.xdata, event.ydata
+        self.pts.append((x, y))
         # transform from data coords to axes coords
         # https://stackoverflow.com/a/62004544/5855131
         if self.transform == 'axes':

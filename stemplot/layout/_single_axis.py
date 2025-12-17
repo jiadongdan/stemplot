@@ -3,7 +3,30 @@ import matplotlib.figure
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 
-def generate_ax(
+
+def make_fig(width=7.2, height=7.2, **kwargs):
+    """
+    Create and return a Matplotlib Figure.
+
+    Parameters
+    ----------
+    width : float, optional
+        Figure width in inches. Default is 7.2 inches.
+    height : float, optional
+        Figure height in inches. Default is 7.2 inches.
+    **kwargs : dict, optional
+        Additional keyword arguments passed to `matplotlib.pyplot.figure`,
+        such as `dpi`, `facecolor`, or `constrained_layout`.
+
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        The created Matplotlib Figure instance.
+    """
+    return plt.figure(figsize=(width, height), **kwargs)
+
+
+def add_ax(
         fig: matplotlib.figure.Figure,
         width: float,
         height: float,

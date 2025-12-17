@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.widgets import MultiCursor
 
-def plot_compare(imgs, size=18, cursor=False, **kwargs):
+def plot_compare(imgs, size=18, cursor=True, **kwargs):
     # sklearn check_array is not recommended here
     # imgs = check_array(imgs, allow_nd=True)
     n = len(imgs)

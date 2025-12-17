@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.utils import check_array
+
 
 class DataSlicer:
     def __init__(self, ax, data, **kwargs):
@@ -55,6 +55,8 @@ class DataSlicer:
             self.ind = (self.ind + 1) % self.num_slices
         elif event.key == 'left':
             self.ind = (self.ind - 1) % self.num_slices
+        else:
+            return  # Don't update if key not relevant
 
         self._update_data()
         self._update_xlabel()
@@ -68,28 +70,37 @@ class DataSlicer:
         elif self.plot_type == 'points':
             self.artist.set_offsets(self.data[self.ind])
 
+
 def imshow(imgs, ax=None, **kwargs):
     ax = ax or plt.subplots(figsize=(7.2, 7.2))[1]
-    imgs = check_array(imgs, allow_nd=True)
+    imgs = np.asarray(imgs)
+
+    # Extract custom kwargs before passing to matplotlib
+    hvlines = kwargs.pop('hvlines', False)
 
     shape = imgs.shape
     if len(shape) == 3 and shape[2] != 3:
         im = DataSlicer(ax, imgs, **kwargs)
     else:
-        im = ax.imshow(imgs.squeeze(), **kwargs)  # Squeeze in case of single image
+        im = ax.imshow(imgs.squeeze(), **kwargs)
 
-    if kwargs.get('hvlines', False):
+    if hvlines:
         h, w = imgs.shape[:2]
         ax.axhline(h / 2, color='r')
         ax.axvline(w / 2, color='r')
+
     return im
+
 
 def plot(lines, ax=None, **kwargs):
     ax = ax or plt.subplots(figsize=(7.2, 7.2))[1]
+    lines = np.asarray(lines)  # Consistency with imshow
     ds = DataSlicer(ax, lines, **kwargs)
     return ds
 
+
 def scatter(points, ax=None, **kwargs):
     ax = ax or plt.subplots(figsize=(7.2, 7.2))[1]
+    points = np.asarray(points)  # Consistency with imshow
     sc = DataSlicer(ax, points, **kwargs)
     return sc
