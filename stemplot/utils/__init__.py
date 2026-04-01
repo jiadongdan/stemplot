@@ -9,6 +9,7 @@ from ._plot_bar import plot_bar
 from ._plot_bar import plot_gradient_bar
 from ._save_fig import save_fig
 from ._plot_confusion_matrix import plot_confusion_matrix
+from ._plot_radar import plot_radar
 
 __all__ = ['plot_density',
            'plot_pca',
@@ -21,4 +22,5 @@ __all__ = ['plot_density',
            'plot_gradient_bar',
            'save_fig',
            'plot_confusion_matrix',
+           'plot_radar',
            ]
