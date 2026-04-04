@@ -20,7 +20,7 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install numpy matplotlib pytest
+        run: pip install -r requirements-test.txt
 
       - name: Run tests
         run: pytest tests/ -v
