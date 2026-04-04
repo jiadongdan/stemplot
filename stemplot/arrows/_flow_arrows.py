@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
+from stemplot.patches._utils import _add_rounded_corners
+
 import os
 import tempfile
 from pathlib import Path
@@ -51,64 +53,6 @@ def get_arrow_path(start, end, mode='line', radius=0):
         x, y = _add_rounded_corners(x, y, radius)
 
     return np.array(x), np.array(y)
-
-
-def _add_rounded_corners(x_coords, y_coords, radius):
-    """
-    Internal helper to round corners using Quadratic Bezier curves.
-    """
-    points = np.column_stack([x_coords, y_coords])
-    new_points = []
-
-    # Start with the first point
-    new_points.append(points[0])
-
-    # Iterate over the intermediate corner points
-    for i in range(1, len(points) - 1):
-        prev_p = points[i-1]
-        curr_p = points[i]
-        next_p = points[i+1]
-
-        # Calculate vectors for the two segments meeting at this corner
-        vec_in = curr_p - prev_p
-        vec_out = next_p - curr_p
-
-        len_in = np.linalg.norm(vec_in)
-        len_out = np.linalg.norm(vec_out)
-
-        # Safety: Limit radius to half the shortest segment
-        # to prevent the curve from overlapping with previous/next corners
-        valid_radius = min(radius, len_in / 2, len_out / 2)
-
-        # If segment is too short, treat as sharp corner
-        if valid_radius < 1e-3:
-            new_points.append(curr_p)
-            continue
-
-        # --- Geometry Calculation ---
-        # 1. Find tangent points (start and end of the arc)
-        # Move back from corner along input vector
-        tan_in = curr_p - (vec_in / len_in) * valid_radius
-        # Move forward from corner along output vector
-        tan_out = curr_p + (vec_out / len_out) * valid_radius
-
-        # 2. Generate smooth curve points (Quadratic Bezier)
-        # This approximates a circular arc well enough for visuals
-        t = np.linspace(0, 1, 20).reshape(-1, 1) # 20 points per corner
-
-        # Bezier Formula: (1-t)^2*P0 + 2(1-t)t*P1 + t^2*P2
-        # P0=tan_in, P1=curr_p (control), P2=tan_out
-        curve = (1-t)**2 * tan_in + 2*(1-t)*t * curr_p + t**2 * tan_out
-
-        # Add curve points (this automatically bridges the gap from the previous segment)
-        new_points.extend(curve)
-
-    # Add final point
-    new_points.append(points[-1])
-
-    # Return as separate x, y arrays
-    result = np.array(new_points)
-    return result[:, 0], result[:, 1]
 
 
 def get_arrow_head(x, y, head_length, head_width=1.0, clip_curve=True):

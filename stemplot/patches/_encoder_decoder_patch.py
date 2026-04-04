@@ -4,41 +4,7 @@ import matplotlib.patches as mpatches
 from matplotlib.path import Path
 from matplotlib.colors import to_rgba
 
-
-def _add_rounded_corners(x_coords, y_coords, radius):
-    """
-    Internal helper to round corners using Quadratic Bezier curves.
-    Handles closed polygons correctly by treating corners as cyclic.
-    """
-    points = np.column_stack([x_coords, y_coords])
-    n = len(points)
-    new_points = []
-
-    for i in range(n):
-        prev_p = points[(i - 1) % n]
-        curr_p = points[i]
-        next_p = points[(i + 1) % n]
-
-        vec_in  = curr_p - prev_p
-        vec_out = next_p - curr_p
-        len_in  = np.linalg.norm(vec_in)
-        len_out = np.linalg.norm(vec_out)
-
-        valid_radius = min(radius, len_in / 2, len_out / 2)
-
-        if valid_radius < 1e-3:
-            new_points.append(curr_p)
-            continue
-
-        tan_in  = curr_p - (vec_in  / len_in)  * valid_radius
-        tan_out = curr_p + (vec_out / len_out) * valid_radius
-
-        t = np.linspace(0, 1, 20).reshape(-1, 1)
-        curve = (1-t)**2 * tan_in + 2*(1-t)*t * curr_p + t**2 * tan_out
-        new_points.extend(curve)
-
-    result = np.array(new_points)
-    return result[:, 0], result[:, 1]
+from stemplot.patches._utils import _add_rounded_corners
 
 
 def draw_rounded_trapezoid(ax,
@@ -63,8 +29,7 @@ def draw_rounded_trapezoid(ax,
     unique = np.array([bl, br, tr, tl])
     x_u, y_u = unique[:, 0], unique[:, 1]
 
-    # Directly pass the 4 corners — no manual wrapping needed
-    x_r, y_r = _add_rounded_corners(x_u, y_u, radius)
+    x_r, y_r = _add_rounded_corners(x_u, y_u, radius, closed=True)
 
     # Apply rotation around (x_center, y_center)
     if rotation != 0:
@@ -114,8 +79,7 @@ def draw_rounded_trapezoid_transition(ax,
     unique = np.array([bl, br, tr, tl])
     x_u, y_u = unique[:, 0], unique[:, 1]
 
-    # Directly pass the 4 corners — no manual wrapping needed
-    x_r, y_r = _add_rounded_corners(x_u, y_u, radius)
+    x_r, y_r = _add_rounded_corners(x_u, y_u, radius, closed=True)
 
     # Apply rotation
     if rotation != 0:
