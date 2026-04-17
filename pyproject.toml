@@ -9,7 +9,7 @@ description = "A Python library for scientific plot"
 authors = [{ name = "Jiadong Dan", email = "jiadong.dan@u.nus.edu" }]
 license = { text = "MIT" }
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 keywords = ["stemplot", "visualization", "STEM", "microscopy"]
 dependencies = [
     "numpy>=1.18.0",
@@ -21,7 +21,6 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
